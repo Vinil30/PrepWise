@@ -102,7 +102,7 @@ project/
 │   ├── report.html       # Post-interview report
 │   └── error.html        # Error fallback
 ├── static/
-│   └── ...               # Add CSS/JS assets here if extracted
+│   └── ...             
 ├── app.py                # Flask application entry point
 └── README.md
 ```
