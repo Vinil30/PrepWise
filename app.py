@@ -6,45 +6,41 @@ import logging
 from functools import wraps
 from groq import Groq
 
-# Initialize environment and logging
 load_dotenv()
 logging.basicConfig(level=logging.DEBUG)
 
 app = Flask(__name__)
 app.secret_key = os.getenv('FLASK_SECRET_KEY', os.urandom(24).hex())
 
-
-# API Configuration
 API_CONFIG = {
     "hr": {
         "key": os.getenv("GROQ_HR_API_KEY"),
-        "model": "llama3-70b-8192",
-        "temperature": 0.7,
-        "max_tokens": 500
+        "model": "openai/gpt-oss-120b",
+        "temperature": 0.9,
+        "max_tokens": 250
     },
     "technical": {
         "key": os.getenv("GROQ_TECH_API_KEY"),
-        "model": "llama3-70b-8192",
+        "model": "openai/gpt-oss-120b",
         "temperature": 0.8,
-        "max_tokens": 750
+        "max_tokens": 300
     },
     "cultural": {
         "key": os.getenv("GROQ_CULTURE_API_KEY"),
-        "model": "llama3-70b-8192",
+        "model": "openai/gpt-oss-120b",
         "temperature": 0.6,
-        "max_tokens": 600
+        "max_tokens": 300
     },
     "report": {
         "key": os.getenv("GROQ_CULTURE_API_KEY"),
-        "model": "llama3-70b-8192",
+        "model": "openai/gpt-oss-120b",
         "temperature": 0.6,
-        "max_tokens": 600
+        "max_tokens": 300
     }
 }
 
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 
-# Enhanced interview prompts with scoring guidance
 INTERVIEW_PROFILES = {
     "hr": {
         "instructions": """
@@ -60,8 +56,10 @@ The assistant should behave like a serious professional interviewer.
 If you feel that by question 8, 9, or earlier the candidate has already demonstrated enough in all the grading areas, you can gracefully conclude the interview early by thanking the candidate
 Do not ever ask more than 15 questions. If a question is not answered well, you can probe once but don’t count that as a new question.
 At the end of the interview (whether early or after 15 questions), clearly state the conclusion and ask the user to press the end interview button to generate report.
-
-        Conduct a behavioral interview focusing on:
+Don't mention question numbers and "**Question**" in the response and don't generate special characters like *,@,#,$,%,^,&, etc in the response.Generate strict Markdown.
+ The generated response will be sent to voice AI, so generate plain markdown text.
+ Never use ** in the response.
+     Conduct a behavioral interview focusing on:
         - Teamwork (30% weight)
         - Problem-solving (30%)
         - Adaptability (20%)
@@ -106,13 +104,16 @@ At the end of the interview (whether early or after 15 questions), clearly state
         -- If you feel that by question 8, 9, or earlier the candidate has already demonstrated enough in all the grading areas, you can gracefully conclude the interview early by thanking the candidate
         -- Do not ever ask more than 15 questions. If a question is not answered well, you can probe once but don’t count that as a new question.
         -- At the end of the interview (whether early or after 15 questions), clearly state the conclusion and ask the user to press the end interview button to generate report.
-
+        Don't mention question numbers and "**Question**" in the response and don't generate special characters like *,@,#,$,%,^,&, etc in the response.Generate strict Markdown.
+        The generated response will be sent to voice AI, so generate plain markdown text.
+         Never use ** in the response.
         """,
         "depth_levels": {
             "basic": 4,
             "intermediate": 4,
             "advanced": 2
         }
+        
     },
     "cultural": {
         "instructions": """
@@ -136,7 +137,9 @@ At the end of the interview (whether early or after 15 questions), clearly state
         -- If you feel that by question 8, 9, or earlier the candidate has already demonstrated enough in all the grading areas, you can gracefully conclude the interview early by thanking the candidate
         -- Do not ever ask more than 15 questions. If a question is not answered well, you can probe once but don’t count that as a new question.
         -- At the end of the interview (whether early or after 15 questions), clearly state the conclusion and ask the user to press the end interview button to generate report.
-        """
+        Don't mention question numbers and "**Question**" in the response and don't generate special characters like *,@,#,$,%,^,&, etc in the response.Generate strict Markdown.
+        The generated response will be sent to voice AI, so generate plain markdown text.
+         Never use ** in the response."""
     },
    "report": {
     "instructions": """
@@ -173,9 +176,7 @@ List 2-3 bullet points summarizing the candidate’s key strengths.
 
 ### IMPROVEMENTS ###
 List 2-3 bullet points highlighting areas the candidate should improve on.
-
 ### END IMPROVEMENTS ###
-
 ---
 
 Make sure:
@@ -272,21 +273,17 @@ def ask_question():
                 "status": "waiting"
             }), 429
 
-        # Get user message
         user_message = request.form.get('message', '').strip()
         if not user_message:
             raise ValueError("Empty message received")
 
-        # Mark AI as responding
         session["is_ai_responding"] = True
 
-        # Update conversation
         interview_type = session['job_data']['type']
         session['conversation'].append({"role": "user", "content": user_message})
         session['question_count'] += 1
         session.modified = True
 
-        # Prepare Groq API request
         config = API_CONFIG[interview_type]
         payload = {
             "model": config["model"],
@@ -306,7 +303,6 @@ def ask_question():
         )
         response.raise_for_status()
 
-        # Append AI reply
         ai_reply = response.json()['choices'][0]['message']['content']
         session['conversation'].append({"role": "assistant", "content": ai_reply})
         session["is_ai_responding"] = False
@@ -342,13 +338,13 @@ import json
 def generate_report():
     try:
         full_conversation = session.get("conversation", [])
+        if len(full_conversation) < 5:
+            full_conversation = full_conversation
+        else:
+            full_conversation = full_conversation[-5:]
         if not full_conversation:
             return jsonify({"status": "error", "message": "No conversation found"}), 400
-
-        # Filter only user and assistant messages
         filtered_messages = [msg for msg in full_conversation if msg['role'] in ['user', 'assistant']]
-
-        # If conversation is too short, don't analyze
         user_responses = [msg for msg in filtered_messages if msg['role'] == 'user']
         if len(user_responses) < 2:  # adjust threshold as needed
             fallback_report = """\
@@ -357,14 +353,14 @@ def generate_report():
   "overall_score": 0,
   "accuracy": 0,
   "confidence": "Low",
-  "recommendation": "Not enough responses to evaluate the candidate."
+  "recommendation": "The report generation failed."
 }
 ### END SCORES ###
 
 ---
 
 ### ANALYSIS ###
-Not enough responses were provided by the candidate to generate a meaningful report.
+The report generation failed.
 
 ### END ANALYSIS ###
 
@@ -388,21 +384,20 @@ Not enough responses were provided by the candidate to generate a meaningful rep
                     "overall_score": 0,
                     "accuracy": 0,
                     "confidence": "Low",
-                    "recommendation": "Not enough responses to evaluate the candidate."
+                    "recommendation": "The report generation failed."
                 }
             }
             return jsonify({"status": "success", "report": fallback_report})
 
-        # Proceed with LLM generation if conversation is valid
         user_prompt = "\n".join(
             [f"{msg['role'].capitalize()}: {msg['content']}" for msg in filtered_messages]
         )
         full_prompt = f"""Generate a concise and professional interview feedback report based on this conversation:\n\n{user_prompt}"""
 
-        client = Groq(api_key=os.getenv("GROQ_REPORT_API_KEY"))
+        client = Groq(api_key=os.getenv("GROQ_API_KEY"))
         
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="openai/gpt-oss-120b",
             messages=[
                 {"role": "system", "content": INTERVIEW_PROFILES['report']['instructions']},
                 {"role": "user", "content": full_prompt}
@@ -415,7 +410,6 @@ Not enough responses were provided by the candidate to generate a meaningful rep
         with open("llm_output_log.txt", "w", encoding="utf-8") as f:
             f.write(report_text)
 
-        # Extract scores
         score_match = re.search(r"### SCORES ###\s*({.*?})\s*### END SCORES ###", report_text, re.DOTALL)
         if score_match:
             score_json_str = score_match.group(1)
