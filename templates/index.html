@@ -1,432 +1,396 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Interview Prep Assistant</title>
-    <style>
-        :root {
-            --primary: #4361ee;
-            --secondary: #3f37c9;
-            --accent: #4895ef;
-            --light: #f8f9fa;
-            --dark: #212529;
-            --success: #4cc9f0;
-            --warning: #f72585;
-            --radius: 12px;
-            --shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-            --transition: all 0.3s ease;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elevate Interview | Prep Assistant</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+    :root {
+      --navy: #0f1c2e;
+      --navy-mid: #1a2d44;
+      --navy-light: #243a55;
+      --blue: #2563eb;
+      --blue-soft: #3b82f6;
+      --accent: #06b6d4;
+      --glass: rgba(255,255,255,0.06);
+      --glass-border: rgba(255,255,255,0.11);
+      --text-primary: #e2eaf4;
+      --text-muted: #7a9abf;
+      --green: #10b981;
+      --radius: 1.2rem;
+    }
 
-        body {
-            background-color: #f5f7ff;
-            color: var(--dark);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 2rem;
-        }
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--navy);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background-image:
+        radial-gradient(ellipse 80% 60% at 10% 0%, rgba(37,99,235,0.18) 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 90% 100%, rgba(6,182,212,0.12) 0%, transparent 55%);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 800px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            padding: 2.5rem;
-            margin: auto;
-            transition: var(--transition);
-        }
+    .container {
+      width: 100%;
+      max-width: 680px;
+      background: rgba(15,28,46,0.92);
+      border: 1px solid var(--glass-border);
+      border-radius: 2rem;
+      box-shadow: 0 40px 80px -20px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.03) inset;
+      padding: 2.8rem 2.8rem 2.4rem;
+      transition: all 0.35s ease;
+    }
 
-        h1 {
-            color: var(--primary);
-            margin-bottom: 1.5rem;
-            text-align: center;
-            font-weight: 700;
-            font-size: 2.2rem;
-        }
+    /* progress bar */
+    .progress-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(255,255,255,0.07);
+      border-radius: 10px;
+      margin-bottom: 2.4rem;
+      overflow: hidden;
+    }
+    .progress {
+      height: 100%;
+      background: linear-gradient(90deg, var(--blue), var(--accent));
+      width: 0%;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+      border-radius: 10px;
+    }
 
-        .subtitle {
-            color: #6c757d;
-            text-align: center;
-            margin-bottom: 2rem;
-            font-size: 1.1rem;
-        }
+    /* header */
+    .page-header { text-align: center; margin-bottom: 2.2rem; }
 
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.9rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.5px;
+      line-height: 1.2;
+      margin-bottom: 0.6rem;
+    }
 
-        label {
-            display: block;
-            margin-bottom: 0.5rem;
-            font-weight: 600;
-            color: var(--dark);
-        }
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      font-weight: 400;
+      line-height: 1.5;
+    }
 
-        input, textarea, select {
-            width: 100%;
-            padding: 0.8rem 1rem;
-            border: 2px solid #e9ecef;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
+    /* form */
+    .form-group { margin-bottom: 1.4rem; }
 
-        input:focus, textarea:focus, select:focus {
-            outline: none;
-            border-color: var(--accent);
-            box-shadow: 0 0 0 3px rgba(72, 149, 239, 0.2);
-        }
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
 
-        textarea {
-            min-height: 120px;
-            resize: vertical;
-        }
+    input[type="text"],
+    textarea,
+    select {
+      width: 100%;
+      padding: 13px 16px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      font-size: 0.92rem;
+      font-family: 'DM Sans', sans-serif;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+    }
 
-        .btn {
-            background-color: var(--primary);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: var(--radius);
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-block;
-            text-align: center;
-            width: 100%;
-        }
+    input::placeholder, textarea::placeholder { color: rgba(122,154,191,0.5); }
 
-        .btn:hover {
-            background-color: var(--secondary);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
-        }
+    input:focus, textarea:focus, select:focus {
+      border-color: rgba(59,130,246,0.55);
+      background: rgba(255,255,255,0.07);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
 
-        .btn-secondary {
-            background-color: white;
-            color: var(--primary);
-            border: 2px solid var(--primary);
-        }
+    textarea {
+      min-height: 130px;
+      max-height: 280px;
+      resize: vertical;
+      line-height: 1.6;
+    }
 
-        .btn-secondary:hover {
-            background-color: #f0f4ff;
-        }
+    /* primary button */
+    .btn {
+      width: 100%;
+      padding: 13px 24px;
+      background: linear-gradient(135deg, var(--blue), #1d4ed8);
+      border: none;
+      border-radius: var(--radius);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: white;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      box-shadow: 0 6px 18px -4px rgba(37,99,235,0.45);
+      letter-spacing: 0.1px;
+      margin-top: 0.4rem;
+    }
+    .btn:hover {
+      background: linear-gradient(135deg, #3b82f6, var(--blue));
+      transform: translateY(-1px);
+      box-shadow: 0 10px 24px -6px rgba(37,99,235,0.55);
+    }
+    .btn:active { transform: translateY(0); }
 
-        .card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 1.5rem;
-            margin-top: 2rem;
-        }
+    /* back button */
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 1.6rem;
+      padding: 6px 10px 6px 6px;
+      border-radius: 8px;
+      transition: all 0.18s;
+      letter-spacing: 0.2px;
+    }
+    .back-btn:hover { color: var(--text-primary); background: var(--glass); }
 
-        .card {
-            background: white;
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid #e9ecef;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    /* interview type cards */
+    .card-container {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin: 1.8rem 0 2rem;
+    }
 
-        .card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow);
-            border-color: var(--accent);
-        }
+    .card {
+      background: var(--glass);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      padding: 1.4rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.22s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .card:hover {
+      background: rgba(255,255,255,0.09);
+      border-color: rgba(59,130,246,0.35);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px -8px rgba(37,99,235,0.25);
+    }
+    .card.selected {
+      background: rgba(37,99,235,0.15);
+      border-color: rgba(59,130,246,0.6);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.12), 0 8px 20px -8px rgba(37,99,235,0.3);
+    }
 
-        .card.selected {
-            border-color: var(--primary);
-            background-color: #f0f4ff;
-        }
+    .card-icon {
+      font-size: 2rem;
+      line-height: 1;
+    }
 
-        .card-icon {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            color: var(--primary);
-        }
+    .card-title {
+      font-family: 'Syne', sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
 
-        .card-title {
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: var(--dark);
-        }
+    .card-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+    }
 
-        .card-desc {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
+    /* continue btn hidden state */
+    .hidden { display: none; }
 
-        .hidden {
-            display: none;
-        }
+    /* step tag */
+    .step-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #93c5fd;
+      background: rgba(37,99,235,0.15);
+      border: 1px solid rgba(37,99,235,0.28);
+      padding: 4px 12px;
+      border-radius: 30px;
+      margin-bottom: 1rem;
+    }
 
-        .progress-bar {
-            width: 100%;
-            height: 6px;
-            background-color: #e9ecef;
-            border-radius: 3px;
-            margin-bottom: 2rem;
-            overflow: hidden;
-        }
-
-        .progress {
-            height: 100%;
-            background-color: var(--primary);
-            width: 0%;
-            transition: width 0.5s ease;
-        }
-
-        .back-btn {
-            background: none;
-            border: none;
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-
-        .back-btn svg {
-            margin-right: 5px;
-        }
-
-        @media (max-width: 768px) {
-            .container {
-                padding: 1.5rem;
-            }
-
-            h1 {
-                font-size: 1.8rem;
-            }
-
-            .card-container {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    @media (max-width: 600px) {
+      .container { padding: 2rem 1.5rem; }
+      h1 { font-size: 1.55rem; }
+      .card-container { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Progress Bar -->
-        <div class="progress-bar">
-            <div class="progress" id="progress"></div>
-        </div>
+<div class="container">
 
-        <!-- Home Page -->
-        <div id="home-page">
-            <h1>Interview Preparation Assistant</h1>
-            <p class="subtitle">Enter your target job details to get personalized interview preparation</p>
-            
-            <form id="job-form">
-                <div class="form-group">
-                    <label for="job-role">Target Job Role</label>
-                    <input type="text" id="job-role" placeholder="e.g. Frontend Developer, Data Scientist" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="job-description">Job Description</label>
-                    <textarea id="job-description" placeholder="Paste the job description here..." required></textarea>
-                </div>
-                
-                <button type="submit" class="btn">Continue</button>
-            </form>
-        </div>
+  <div class="progress-bar"><div class="progress" id="progress"></div></div>
 
-        <!-- Interview Type Selection -->
-        <div id="interview-type-page" class="hidden">
-            <button class="back-btn" id="back-to-home">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="19" y1="12" x2="5" y2="12"></line>
-                    <polyline points="12 19 5 12 12 5"></polyline>
-                </svg>
-                Back
-            </button>
-            
-            <h1>Select Interview Type</h1>
-            <p class="subtitle">Choose the type of interview you want to prepare for</p>
-            
-            <div class="card-container">
-                <div class="card" data-type="hr">
-                    <div class="card-icon">💼</div>
-                    <h3 class="card-title">HR Round</h3>
-                    <p class="card-desc">Behavioral questions, company culture, and situational judgment</p>
-                </div>
-                
-                <div class="card" data-type="technical">
-                    <div class="card-icon">👨‍💻</div>
-                    <h3 class="card-title">Technical Round</h3>
-                    <p class="card-desc">Technical skills, problem-solving, and job-specific knowledge</p>
-                </div>
-                
-                <div class="card" data-type="cultural">
-                    <div class="card-icon">🤝</div>
-                    <h3 class="card-title">Cultural Round</h3>
-                    <p class="card-desc">Team fit, values alignment, and work environment preferences</p>
-                </div>
-            </div>
-            
-            <button class="btn hidden" id="continue-from-type">Continue</button>
-        </div>
+  <!-- ── PAGE 1: Job Details ── -->
+  <div id="home-page">
+    <div class="page-header">
+      <div class="step-tag">Step 1 of 2</div>
+      <h1>Interview Prep Assistant</h1>
+      <p class="subtitle">Enter your target job details to get a personalized interview experience</p>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // DOM Elements
-            const homePage = document.getElementById('home-page');
-            const interviewTypePage = document.getElementById('interview-type-page');
-            const jobForm = document.getElementById('job-form');
-            const backToHomeBtn = document.getElementById('back-to-home');
-            const continueFromTypeBtn = document.getElementById('continue-from-type');
-            const progressBar = document.getElementById('progress');
-            const cards = document.querySelectorAll('.card');
+    <form id="job-form">
+      <div class="form-group">
+        <label for="job-role">Target Job Role</label>
+        <input type="text" id="job-role" placeholder="e.g. Frontend Developer, Data Scientist" required>
+      </div>
 
-            // Variables
-            let selectedInterviewType = null;
+      <div class="form-group">
+        <label for="job-description">Job Description</label>
+        <textarea id="job-description" placeholder="Paste the job description here…" required></textarea>
+      </div>
 
-            // Event Listeners
-            jobForm.addEventListener('submit', handleJobFormSubmit);
-            backToHomeBtn.addEventListener('click', goBackToHome);
-            continueFromTypeBtn.addEventListener('click', handleInterviewTypeContinue);
-            
-            cards.forEach(card => {
-                card.addEventListener('click', () => {
-                    // Remove selected class from all cards
-                    cards.forEach(c => c.classList.remove('selected'));
-                    
-                    // Add selected class to clicked card
-                    card.classList.add('selected');
-                    
-                    // Set selected interview type
-                    selectedInterviewType = card.getAttribute('data-type');
-                    
-                    // Show continue button
-                    continueFromTypeBtn.classList.remove('hidden');
-                });
-            });
+      <button type="submit" class="btn">Continue →</button>
+    </form>
+  </div>
 
-            // Functions
-            function handleJobFormSubmit(e) {
-                e.preventDefault();
-                
-                const jobRole = document.getElementById('job-role').value;
-                const jobDescription = document.getElementById('job-description').value;
-                
-                // Save to localStorage
-                localStorage.setItem('targetJobRole', jobRole);
-                localStorage.setItem('jobDescription', jobDescription);
-                
-                // Show next page
-                homePage.classList.add('hidden');
-                interviewTypePage.classList.remove('hidden');
-                
-                // Update progress bar
-                progressBar.style.width = '50%';
-            }
+  <!-- ── PAGE 2: Interview Type ── -->
+  <div id="interview-type-page" class="hidden">
+    <button class="back-btn" id="back-to-home">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/>
+      </svg>
+      Back
+    </button>
 
-            function goBackToHome() {
-                interviewTypePage.classList.add('hidden');
-                homePage.classList.remove('hidden');
-                progressBar.style.width = '0%';
-                
-                // Reset selection
-                cards.forEach(c => c.classList.remove('selected'));
-                continueFromTypeBtn.classList.add('hidden');
-                selectedInterviewType = null;
-            }
+    <div class="page-header">
+      <div class="step-tag">Step 2 of 2</div>
+      <h1>Select Interview Type</h1>
+      <p class="subtitle">Choose the round you want to prepare for and we'll tailor the questions</p>
+    </div>
 
-            function handleInterviewTypeContinue() {
-                if (!selectedInterviewType) return;
-                
-                // Save interview type to localStorage
-                localStorage.setItem('interviewType', selectedInterviewType);
-                
-                // Here you would normally proceed to the next step
-                // For this demo, we'll just show an alert
-                alert(`Preparing for ${selectedInterviewType} interview for ${localStorage.getItem('targetJobRole')}`);
-                
-                // In a real app, you would navigate to the next page
-                // For example:
-                // window.location.href = `interview.html?type=${selectedInterviewType}`;
-                
-                // Update progress bar
-                progressBar.style.width = '100%';
-            }
+    <div class="card-container">
+      <div class="card" data-type="hr">
+        <div class="card-icon">💼</div>
+        <div class="card-title">HR Round</div>
+        <div class="card-desc">Behavioral questions, culture fit &amp; situational judgment</div>
+      </div>
+      <div class="card" data-type="technical">
+        <div class="card-icon">👨‍💻</div>
+        <div class="card-title">Technical Round</div>
+        <div class="card-desc">Technical skills, problem-solving &amp; domain knowledge</div>
+      </div>
+      <div class="card" data-type="cultural">
+        <div class="card-icon">🤝</div>
+        <div class="card-title">Cultural Round</div>
+        <div class="card-desc">Team fit, values alignment &amp; work environment</div>
+      </div>
+    </div>
 
-            function handleInterviewTypeContinue() {
-    if (!selectedInterviewType) return;
-    
-    // Get all stored data
-    const jobData = {
-        jobRole: localStorage.getItem('targetJobRole'),
-        jobDescription: localStorage.getItem('jobDescription'),
-        interviewType: selectedInterviewType
-    };
+    <button class="btn hidden" id="continue-from-type">Start Interview →</button>
+  </div>
 
-    // Send data to Flask backend
-  fetch('/save-job-data', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-        jobRole: localStorage.getItem('targetJobRole'),
-        jobDescription: localStorage.getItem('jobDescription'),
-        interviewType: selectedInterviewType
-    })
-})
-.then(() => window.location.href = '/interview')
-}
-        });
-        
-document.addEventListener('DOMContentLoaded', function() {
-    // ... (existing code)
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const homePage           = document.getElementById('home-page');
+    const interviewTypePage  = document.getElementById('interview-type-page');
+    const jobForm            = document.getElementById('job-form');
+    const backToHomeBtn      = document.getElementById('back-to-home');
+    const continueFromTypeBtn= document.getElementById('continue-from-type');
+    const progressBar        = document.getElementById('progress');
+    const cards              = document.querySelectorAll('.card');
+
+    let selectedInterviewType = null;
+
+    // ── form submit → go to step 2
+    jobForm.addEventListener('submit', function (e) {
+      e.preventDefault();
+      localStorage.setItem('targetJobRole',  document.getElementById('job-role').value);
+      localStorage.setItem('jobDescription', document.getElementById('job-description').value);
+      homePage.classList.add('hidden');
+      interviewTypePage.classList.remove('hidden');
+      progressBar.style.width = '50%';
+    });
+
+    // ── back button
+    backToHomeBtn.addEventListener('click', function () {
+      interviewTypePage.classList.add('hidden');
+      homePage.classList.remove('hidden');
+      progressBar.style.width = '0%';
+      cards.forEach(c => c.classList.remove('selected'));
+      continueFromTypeBtn.classList.add('hidden');
+      selectedInterviewType = null;
+    });
+
+    // ── card selection
+    cards.forEach(card => {
+      card.addEventListener('click', function () {
+        cards.forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+        selectedInterviewType = card.getAttribute('data-type');
+        continueFromTypeBtn.classList.remove('hidden');
+      });
+    });
+
+    // ── continue → send to backend
+    continueFromTypeBtn.addEventListener('click', function () {
+      if (!selectedInterviewType) return;
+      progressBar.style.width = '100%';
+      fetch('/save-job-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          jobRole:       localStorage.getItem('targetJobRole'),
+          jobDescription:localStorage.getItem('jobDescription'),
+          interviewType: selectedInterviewType
+        })
+      }).then(() => window.location.href = '/interview');
+    });
+
+    // ── TTS for job description (speak-btn if present)
+    let voices = [];
+    function loadVoices() {
+      voices = speechSynthesis.getVoices();
+      if (voices.length === 0) setTimeout(loadVoices, 100);
+    }
+    loadVoices();
+    if (typeof speechSynthesis !== 'undefined') speechSynthesis.onvoiceschanged = loadVoices;
 
     const speakBtn = document.getElementById('speak-btn');
-
-    let voices = [];
-
-    function loadVoices() {
-        voices = speechSynthesis.getVoices();
-        // Wait a bit and reload if voices are empty
-        if (voices.length === 0) {
-            setTimeout(loadVoices, 100);
-        }
-    }
-
-    loadVoices();
-    if (typeof speechSynthesis !== "undefined") {
-        speechSynthesis.onvoiceschanged = loadVoices;
-    }
-
     speakBtn?.addEventListener('click', () => {
-        const description = document.getElementById('job-description').value;
-        const utterance = new SpeechSynthesisUtterance(description);
-
-        // Optional: Change voice type here by filtering voices
-        const selectedVoice = voices.find(voice => voice.name.includes("Google UK English Female")) || voices[0];
-        utterance.voice = selectedVoice;
-
-        utterance.rate = 1; // speed
-        utterance.pitch = 1; // tone
-        speechSynthesis.speak(utterance);
+      const description = document.getElementById('job-description').value;
+      const utterance = new SpeechSynthesisUtterance(description);
+      const selectedVoice = voices.find(v => v.name.includes('Google UK English Female')) || voices[0];
+      utterance.voice = selectedVoice;
+      utterance.rate = 1; utterance.pitch = 1;
+      speechSynthesis.speak(utterance);
     });
-});
-
-    </script>
+  });
+</script>
 </body>
 </html>
