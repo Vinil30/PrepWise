@@ -1,11 +1,238 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elevate Interview | Error</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    :root {
+      --navy:         #0f1c2e;
+      --blue:         #2563eb;
+      --blue-soft:    #3b82f6;
+      --accent:       #06b6d4;
+      --glass-border: rgba(255,255,255,0.10);
+      --text-primary: #e2eaf4;
+      --text-muted:   #7a9abf;
+      --text-dim:     #4e6a88;
+      --red:          #ef4444;
+      --card-bg:      rgba(17,30,50,0.95);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--navy);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      background-image:
+        radial-gradient(ellipse 70% 50% at 15% 10%, rgba(239,68,68,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse 60% 40% at 85% 90%, rgba(37,99,235,0.12) 0%, transparent 55%);
+    }
+
+    .error-card {
+      width: 100%;
+      max-width: 520px;
+      background: var(--card-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 1.5rem;
+      padding: 3rem 2.5rem 2.5rem;
+      text-align: center;
+      box-shadow: 0 30px 60px -15px rgba(0,0,0,0.55);
+      animation: fadeInUp 0.45s cubic-bezier(0.2,0.9,0.4,1.1) both;
+    }
+
+    /* icon */
+    .error-icon-wrap {
+      width: 72px;
+      height: 72px;
+      border-radius: 1.2rem;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.22);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1.6rem;
+      font-size: 2rem;
+      animation: shake 0.55s 0.5s cubic-bezier(0.36,0.07,0.19,0.97) both;
+    }
+
+    /* code badge */
+    .error-code {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.4px;
+      text-transform: uppercase;
+      color: #fca5a5;
+      background: rgba(239,68,68,0.12);
+      border: 1px solid rgba(239,68,68,0.24);
+      padding: 4px 14px;
+      border-radius: 30px;
+      margin-bottom: 1.2rem;
+    }
+
+    h1 {
+      font-size: 1.55rem;
+      font-weight: 800;
+      color: var(--text-primary);
+      letter-spacing: -0.4px;
+      margin-bottom: 0.7rem;
+      line-height: 1.25;
+    }
+
+    .error-desc {
+      font-size: 0.88rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.7;
+      margin-bottom: 2rem;
+      max-width: 380px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* divider */
+    .divider {
+      height: 1px;
+      background: var(--glass-border);
+      margin-bottom: 1.6rem;
+    }
+
+    /* what to try list */
+    .try-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-bottom: 0.9rem;
+    }
+
+    .try-list {
+      list-style: none;
+      text-align: left;
+      margin-bottom: 2rem;
+    }
+    .try-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 0.84rem;
+      font-weight: 400;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+    .try-list li:last-child { border-bottom: none; }
+    .try-list li::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--blue-soft);
+      flex-shrink: 0;
+      margin-top: 7px;
+    }
+
+    /* action buttons */
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 12px 20px;
+      border-radius: 0.8rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue), #1d4ed8);
+      color: white;
+      box-shadow: 0 4px 14px -4px rgba(37,99,235,0.5);
+    }
+    .btn-primary:hover {
+      background: linear-gradient(135deg, var(--blue-soft), var(--blue));
+      transform: translateY(-1px);
+      box-shadow: 0 8px 20px -6px rgba(37,99,235,0.55);
+    }
+
+    .btn-secondary {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid var(--glass-border);
+      color: var(--text-muted);
+    }
+    .btn-secondary:hover {
+      background: rgba(255,255,255,0.08);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+
+    .btn:active { transform: translateY(0); }
+
+    /* animations */
+    @keyframes fadeInUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+    @keyframes shake {
+      0%,100% { transform: rotate(0deg); }
+      20%     { transform: rotate(-8deg); }
+      40%     { transform: rotate(8deg); }
+      60%     { transform: rotate(-5deg); }
+      80%     { transform: rotate(4deg); }
+    }
+  </style>
 </head>
 <body>
-    <p>Error</p>
+
+  <div class="error-card">
+
+    <div class="error-icon-wrap">⚠️</div>
+
+    <div class="error-code">Report Generation Failed</div>
+
+    <h1>Something went wrong</h1>
+
+    <p class="error-desc">
+      We couldn't generate your interview report. This is usually a temporary issue — your session data is safe.
+    </p>
+
+    <div class="divider"></div>
+
+    <div class="try-label">What you can try</div>
+    <ul class="try-list">
+      <li>Go back and end the interview again to retry report generation</li>
+      <li>Make sure you completed at least a few exchanges with the interviewer</li>
+      <li>Check your internet connection and try again</li>
+    </ul>
+
+    <div class="actions">
+      <a href="/interview" class="btn btn-primary">↩ Back to Interview</a>
+      <a href="/" class="btn btn-secondary">Start Over</a>
+    </div>
+
+  </div>
+
 </body>
 </html>
